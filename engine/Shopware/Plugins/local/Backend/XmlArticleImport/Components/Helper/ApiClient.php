@@ -1,6 +1,6 @@
 <?php
 
-class Shopware_Components_ImportApiClient {
+class Shopware_Components_Helper_ApiClient {
     const METHODE_GET    = 'GET';
     const METHODE_PUT    = 'PUT';
     const METHODE_POST   = 'POST';

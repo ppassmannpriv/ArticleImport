@@ -1,5 +1,5 @@
 <?php
-class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Components_Plugin_Bootstrap
+class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
     public function getCapabilities()
     {
@@ -59,6 +59,7 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
  
 		*/
 		$this->createConfiguration();
+		$this->regControllers();
         return array(
             'success' => true,
             'message' => 'All is well.'
@@ -87,6 +88,11 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
 			)
 		);
 	}
+
+	private function regControllers()
+	{
+		$this->registerController('Backend', 'Import');
+	}
  
     public function uninstall()
     {
@@ -106,12 +112,6 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
  
     private function subscribeEvents()
     {
- 
-        $this->subscribeEvent(
-            'Shopware_Modules_Order_SendMail_FilterVariables',
-            'onSaveOrder'
-        );
-
         $this->subscribeEvent(
 			'Enlight_Bootstrap_InitResource_XmlArticleImport',
             'onInitResourceXmlArticleImport'
@@ -119,9 +119,13 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
 
 		$this->subscribeEvent(
 			'Enlight_Bootstrap_InitResource_XmlArticleImportHelper',
-            'loadHelpers'
+            'onInitResourceXmlArticleImportHelper'
 		);
- 
+
+		$this->subscribeEvent(
+			'Enlight_Bootstrap_InitResource_XmlArticleImportApiClient',
+            'onInitResourceImportApiClient'
+		);
     }
 
 	public function onInitCollection(Enlight_Event_EventArgs $arguments)
@@ -130,9 +134,9 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
 		#$this->onInitResourceOrderExportHelper($arguments);
 	}
 
-	public function onInitResourceImportApiClient(Enlight_Event_EventArgs $arguments)
-    {
-        $this->Application()->Loader()->registerNamespace(
+	public function onInitResourceXmlArticleImport(Enlight_Event_EventArgs $arguments)
+	{
+		$this->Application()->Loader()->registerNamespace(
             'Shopware_Components',
             $this->Path() . 'Components/'
         );
@@ -140,34 +144,34 @@ class Shopware_Plugins_Frontend_XmlArticleImport_Bootstrap extends Shopware_Comp
         $component = new Shopware_Components_XmlArticleImport();
  
         return $component;
+	}
+
+	public function onInitResourceImportApiClient(Enlight_Event_EventArgs $arguments)
+    {
+        $this->Application()->Loader()->registerNamespace(
+            'Shopware_Components',
+            $this->Path() . 'Components/Helper/'
+        );
+ 
+        $component = new Shopware_Components_Helper_ApiClient();
+ 
+        return $component;
     }
 
-	public function loadHelpers(Enlight_Event_EventArgs $arguments)
-	{
-		die('yay');
-		$this->onInitResourceXmlArticleImportHelper($arguments);
-	}
 
 	public function onInitResourceXmlArticleImportHelper(Enlight_Event_EventArgs $arguments)
     {
+
 		$this->Application()->Loader()->registerNamespace(
             'Shopware_Components_Helper',
             $this->Path() . 'Components/Helper/'
         );
  
-        $component = new Shopware_Components_Helper_DataWorkers();
- 
+        $component = new Shopware_Components_Helper_Data();
+
         return $component;
 
-	}
-	
-
-	public function onSaveOrder(Enlight_Event_EventArgs $arguments)
-	{
-		var_dump('on hook');
-		die();
-	}
-	
+	}	
 	
     public function afterInit()
     {
