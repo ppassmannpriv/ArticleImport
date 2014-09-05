@@ -61,6 +61,13 @@ class Shopware_Components_Helper_ApiClient {
     public function delete($url, $params = array()) {
         return $this->call($url, self::METHODE_DELETE, array(), $params);
     }
+
+	public function makeConnection()
+	{
+		$this->__construct('http://shopwarebox.scriptkid.de/api', 'admin', 'CDfCqaxUWTfQ4FVW1bI5ygv3MXTsIk7kBhWZd5EV');
+
+		return $this;
+	}
  
     protected function prepareResponse($result, $httpCode) {
         echo "<h2>HTTP: $httpCode</h2>";
