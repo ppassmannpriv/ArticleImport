@@ -1,6 +1,6 @@
 <?php
 
-class Shopware_Components_Helper_Data
+class Shopware_Components_Helper_Files
 {
 	public function checkFiles($dir, $extensions = array())
 	{ 
@@ -30,5 +30,5 @@ class Shopware_Components_Helper_Data
 
 		return $files;
 	}
-
+	
 }

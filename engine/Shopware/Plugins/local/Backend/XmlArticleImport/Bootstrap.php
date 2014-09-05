@@ -118,8 +118,13 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 		);
 
 		$this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImportHelper',
-            'onInitResourceXmlArticleImportHelper'
+			'Enlight_Bootstrap_InitResource_XmlArticleImportData',
+            'onInitResourceXmlArticleImportData'
+		);
+
+		$this->subscribeEvent(
+			'Enlight_Bootstrap_InitResource_XmlArticleImportFiles',
+            'onInitResourceXmlArticleImportFiles'
 		);
 
 		$this->subscribeEvent(
@@ -131,7 +136,6 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 	public function onInitCollection(Enlight_Event_EventArgs $arguments)
 	{
 		$this->onInitResourceXmlArticleImport($arguments);
-		#$this->onInitResourceOrderExportHelper($arguments);
 	}
 
 	public function onInitResourceXmlArticleImport(Enlight_Event_EventArgs $arguments)
@@ -159,7 +163,7 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
     }
 
 
-	public function onInitResourceXmlArticleImportHelper(Enlight_Event_EventArgs $arguments)
+	public function onInitResourceXmlArticleImportData(Enlight_Event_EventArgs $arguments)
     {
 
 		$this->Application()->Loader()->registerNamespace(
@@ -171,7 +175,21 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 
         return $component;
 
-	}	
+	}
+	
+	public function onInitResourceXmlArticleImportFiles(Enlight_Event_EventArgs $arguments)
+    {
+
+		$this->Application()->Loader()->registerNamespace(
+            'Shopware_Components_Helper',
+            $this->Path() . 'Components/Helper/'
+        );
+ 
+        $component = new Shopware_Components_Helper_Files();
+
+        return $component;
+
+	}
 	
     public function afterInit()
     {

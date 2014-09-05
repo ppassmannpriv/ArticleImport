@@ -4,7 +4,8 @@ class Shopware_Controllers_Backend_Import extends Shopware_Controllers_Backend_E
 {
 	public function startAction()
 	{
-		$dataHelper = Shopware()->XmlArticleImportHelper();
+		$dataHelper = Shopware()->XmlArticleImportData();
+		$filesHelper = Shopware()->XmlArticleImportFiles();
 		$apiClient = Shopware()->XmlArticleImportApiClient()->makeConnection();
 		
 		$data = array(
@@ -15,7 +16,7 @@ class Shopware_Controllers_Backend_Import extends Shopware_Controllers_Backend_E
 			)
 		);
 
-		$this->createProduct($data, $apiClient);
+		#$this->createProduct($data, $apiClient);
 		
 	}
 
