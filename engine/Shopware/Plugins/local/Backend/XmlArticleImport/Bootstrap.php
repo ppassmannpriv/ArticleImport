@@ -118,6 +118,11 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 		);
 
 		$this->subscribeEvent(
+			'Enlight_Bootstrap_InitResource_XmlArticleImportXmlparser',
+            'onInitResourceXmlArticleImportXmlparser'
+		);
+
+		$this->subscribeEvent(
 			'Enlight_Bootstrap_InitResource_XmlArticleImportData',
             'onInitResourceXmlArticleImportData'
 		);
@@ -162,6 +167,19 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
         return $component;
     }
 
+	public function onInitResourceXmlArticleImportXmlparser(Enlight_Event_EventArgs $arguments)
+    {
+
+		$this->Application()->Loader()->registerNamespace(
+            'Shopware_Components_Helper',
+            $this->Path() . 'Components/Helper/'
+        );
+ 
+        $component = new Shopware_Components_Helper_Xmlparser();
+
+        return $component;
+
+	}
 
 	public function onInitResourceXmlArticleImportData(Enlight_Event_EventArgs $arguments)
     {

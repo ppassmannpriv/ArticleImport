@@ -30,5 +30,13 @@ class Shopware_Components_Helper_Files
 
 		return $files;
 	}
+
+	public function getDir()
+	{
+		$path = $_SERVER["DOCUMENT_ROOT"];
+		$configString = Shopware()->Plugins()->Backend()->XmlArticleImport()->Config()->xmlDirPath;
+		$path .= $configString;
+		return $path;
+	}
 	
 }

@@ -31,4 +31,14 @@ class Shopware_Components_Helper_Data
 		return $files;
 	}
 
+	public function parseFiles($files, $ext)
+	{
+		switch($ext) {
+			case 'xml':
+			$helper = Shopware()->XmlArticleImportXmlparser();
+			$helper->parseXmls($files);
+			break;
+		}
+	}
+
 }
