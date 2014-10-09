@@ -1,4 +1,4 @@
-# XML Article Import #
+# Article Import #
 
 ### Shopware v4 ###
 
