@@ -4,13 +4,9 @@
 
 ---
 
-This plugin will be able to parse XML Files and create articles based from the information provided by the XML. This will be planable via cronjobs.
+This plugin will be able to parse Files and create articles based from the information provided by the. This will be planable via cronjobs.
 
-version: 0.0.1
+version: 0.1.1
 
-
-Important todos:
-
-- Create an article with REST
-- Create an admin menu, so settings can be made
-- Parse XMLs to articledata and post them to the REST API
+So now we actually can import CSV files - XML will come soon. I do need some definitions of large CRMsystems and how their XML structure is build.
+Oh yeah I need to work on the backend menu. A lot of stuff needs to be made configureable.
