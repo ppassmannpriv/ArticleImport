@@ -1,5 +1,5 @@
 <?php
-class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Components_Plugin_Bootstrap
+class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
     public function getCapabilities()
     {
@@ -12,7 +12,7 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
  
     public function getLabel()
     {
-        return 'XML Article Import';
+        return 'Article Import';
     }
  
     public function getVersion()
@@ -113,27 +113,32 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
     private function subscribeEvents()
     {
         $this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImport',
-            'onInitResourceXmlArticleImport'
+			'Enlight_Bootstrap_InitResource_ArticleImport',
+            'onInitResourceArticleImport'
 		);
 
 		$this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImportXmlparser',
-            'onInitResourceXmlArticleImportXmlparser'
+            'Enlight_Bootstrap_InitResource_ArticleImportCsvparser',
+            'onInitResourceArticleImportCsvparser'
+        );
+
+        $this->subscribeEvent(
+			'Enlight_Bootstrap_InitResource_ArticleImportXmlparser',
+            'onInitResourceArticleImportXmlparser'
 		);
 
 		$this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImportData',
-            'onInitResourceXmlArticleImportData'
+			'Enlight_Bootstrap_InitResource_ArticleImportData',
+            'onInitResourceArticleImportData'
 		);
 
 		$this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImportFiles',
-            'onInitResourceXmlArticleImportFiles'
+			'Enlight_Bootstrap_InitResource_ArticleImportFiles',
+            'onInitResourceArticleImportFiles'
 		);
 
 		$this->subscribeEvent(
-			'Enlight_Bootstrap_InitResource_XmlArticleImportApiClient',
+			'Enlight_Bootstrap_InitResource_ArticleImportApiClient',
             'onInitResourceImportApiClient'
 		);
     }
@@ -143,14 +148,14 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 		$this->onInitResourceXmlArticleImport($arguments);
 	}
 
-	public function onInitResourceXmlArticleImport(Enlight_Event_EventArgs $arguments)
+	public function onInitResourceArticleImport(Enlight_Event_EventArgs $arguments)
 	{
 		$this->Application()->Loader()->registerNamespace(
             'Shopware_Components',
             $this->Path() . 'Components/'
         );
  
-        $component = new Shopware_Components_XmlArticleImport();
+        $component = new Shopware_Components_ArticleImport();
  
         return $component;
 	}
@@ -167,7 +172,7 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
         return $component;
     }
 
-	public function onInitResourceXmlArticleImportXmlparser(Enlight_Event_EventArgs $arguments)
+	public function onInitResourceArticleImportXmlparser(Enlight_Event_EventArgs $arguments)
     {
 
 		$this->Application()->Loader()->registerNamespace(
@@ -181,7 +186,21 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 
 	}
 
-	public function onInitResourceXmlArticleImportData(Enlight_Event_EventArgs $arguments)
+    public function onInitResourceArticleImportCsvparser(Enlight_Event_EventArgs $arguments)
+    {
+
+        $this->Application()->Loader()->registerNamespace(
+            'Shopware_Components_Helper',
+            $this->Path() . 'Components/Helper/'
+        );
+
+        $component = new Shopware_Components_Helper_Csvparser();
+
+        return $component;
+
+    }
+
+	public function onInitResourceArticleImportData(Enlight_Event_EventArgs $arguments)
     {
 
 		$this->Application()->Loader()->registerNamespace(
@@ -195,7 +214,7 @@ class Shopware_Plugins_Backend_XmlArticleImport_Bootstrap extends Shopware_Compo
 
 	}
 	
-	public function onInitResourceXmlArticleImportFiles(Enlight_Event_EventArgs $arguments)
+	public function onInitResourceArticleImportFiles(Enlight_Event_EventArgs $arguments)
     {
 
 		$this->Application()->Loader()->registerNamespace(

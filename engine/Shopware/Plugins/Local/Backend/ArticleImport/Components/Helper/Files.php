@@ -1,6 +1,6 @@
 <?php
 
-class Shopware_Components_Helper_Data
+class Shopware_Components_Helper_Files
 {
 	public function checkFiles($dir, $extensions = array())
 	{ 
@@ -31,14 +31,12 @@ class Shopware_Components_Helper_Data
 		return $files;
 	}
 
-	public function parseFiles($files, $ext)
+	public function getDir()
 	{
-		switch($ext) {
-			case 'xml':
-			$helper = Shopware()->XmlArticleImportXmlparser();
-			$helper->parseXmls($files);
-			break;
-		}
+		$path = $_SERVER["DOCUMENT_ROOT"];
+		$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->xmlDirPath;
+		$path .= $configString;
+		return $path;
 	}
-
+	
 }
