@@ -10,12 +10,15 @@ class Shopware_Controllers_Backend_Import
 		$filesHelper = Shopware()->ArticleImportFiles();
 		$apiClient = Shopware()->ArticleImportApiClient()->makeConnection();
 		
-		$dir = $filesHelper->getDir();
+		$dir = $filesHelper->getDir('csv');
+
 		if($filesHelper->checkFiles($dir, array('csv')))
 		{
 			$files = $filesHelper->getFiles($dir, 'csv');
 		}
+
 		
+		$imgBasePath = $filesHelper->getDir('images');
 		$data = $dataHelper->parseFiles($files, 'csv');
 		//THE CSV FILE SHOULD BE UTF-8 ! THIS IS VERY IMPORTANT. THE API WILL NOT ACCEPT STRINGS IN NON-UTF8
 
@@ -44,7 +47,8 @@ class Shopware_Controllers_Backend_Import
 					)
 				);
 				$postArray[] = $post;
-			}
+			}	
+
 			$this->createProducts($postArray, $apiClient);
 		}
 		

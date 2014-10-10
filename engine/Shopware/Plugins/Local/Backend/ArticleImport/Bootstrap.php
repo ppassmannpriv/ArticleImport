@@ -17,7 +17,7 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
  
     public function getVersion()
     {
-        return "0.0.1";
+        return "0.1.2";
     } 
  
     public function getInfo() {
@@ -75,9 +75,29 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 		$form->setElement('text', 'xmlDirPath',
 			array(
 				'label' => 'XML Ordner',
-				'value' => 'Wo werden die ImportXMLs abgelegt?',
+				'value' => 'Wo werden die Import XMLs abgelegt?',
 				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
-				'description' => 'Ordnerpfad für import',
+				'description' => 'Ordnerpfad für Artikeldatenimport',
+				'required' => true,
+			)
+		);
+		
+		$form->setElement('text', 'csvDirPath',
+			array(
+				'label' => 'CSV Ordner',
+				'value' => 'Wo werden die Import CSVs abgelegt?',
+				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+				'description' => 'Ordnerpfad für Artikeldatenimport',
+				'required' => true,
+			)
+		);
+
+		$form->setElement('text', 'imagesDirPath',
+			array(
+				'label' => 'Bildordner',
+				'value' => 'Wo werden die Bilder abgelegt?',
+				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+				'description' => 'Ordnerpfad für Bildimport',
 				'required' => true,
 			)
 		);

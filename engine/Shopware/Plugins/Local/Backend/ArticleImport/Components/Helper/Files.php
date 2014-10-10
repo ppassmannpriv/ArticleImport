@@ -31,11 +31,24 @@ class Shopware_Components_Helper_Files
 		return $files;
 	}
 
-	public function getDir()
+	public function getDir($filetype)
 	{
 		$path = $_SERVER["DOCUMENT_ROOT"];
-		$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->xmlDirPath;
-		$path .= $configString;
+		switch($filetype) {
+			case 'xml':
+				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->xmlDirPath;
+				$path .= $configString;
+				break;
+			case 'csv':
+				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->csvDirPath;
+				$path .= $configString;
+				break;
+			case 'images':
+				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->imagesDirPath;
+				$path = $configString;
+				break;
+		}
+		
 		return $path;
 	}
 	
