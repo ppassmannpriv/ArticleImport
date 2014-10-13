@@ -4,6 +4,7 @@ class Shopware_Controllers_Backend_Import
 	extends 
 	Shopware_Controllers_Backend_ExtJs
 {
+
 	public function startAction()
 	{
 		$dataHelper = Shopware()->ArticleImportData();
@@ -44,6 +45,15 @@ class Shopware_Controllers_Backend_Import
 						'number' => $article['ordernumber'],
 						'active' => $article['active'],
 						'weight' => $article['weight']
+					),
+					'images' => array(
+						array(
+							'ordernumber' => $article['odernumber'],
+							'link' => 'http://placekitten.com/g/500/500',
+							'description' => $article['name'],
+							'position' => '',
+							'main' => 1
+						)
 					)
 				);
 				$postArray[] = $post;
@@ -58,10 +68,43 @@ class Shopware_Controllers_Backend_Import
 	public function createProducts($data, $apiClient)
 	{
 		try {
+			foreach($data as $d)
+			{
+				/*
+				$updateImages = array(
+					'images' => array(
+						array()
+					),
+				);
+				$apiClient->put('articles/'.$d['ordernumber'].'?useNumberAsId=true', $apiClient->put(), $updateImages);
+				*/
+				$articleResource = \Shopware\Components\Api\Manager::getResource('article');
+				$article = $articleResource->getOneByNumber($d['mainDetail']['number']);
+				$this->deleteImages($article['id'], $articleResource);
+
+			}
+			
+		} catch(Exception $e) {
+			throw $e;
+		}
+		try {
 			$apiClient->put('articles/', $data);
 		} catch(Exception $e) {
 			throw $e;
 		}
+	}
+
+	public function deleteImages($id, $articleResource)
+	{
+		$articleRepository = $articleResource->getRepository();
+		$result = $articleRepository->getArticleImagesQuery($id)->getResult();
+		
+		foreach ($result as $imageModel) {		
+			Shopware()->Models()->remove($imageModel);
+			Shopware()->Models()->remove($imageModel->getMedia());
+		}
+		Shopware()->Models()->flush();
+        return true;
 	}
 
 	public function createProduct($data, $apiClient)

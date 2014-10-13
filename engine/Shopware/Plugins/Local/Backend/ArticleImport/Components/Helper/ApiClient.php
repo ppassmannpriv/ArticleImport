@@ -64,7 +64,11 @@ class Shopware_Components_Helper_ApiClient {
 
 	public function makeConnection()
 	{
-		$this->__construct('http://h2353672.stratoserver.net/api', 'admin', 'CDfCqaxUWTfQ4FVW1bI5ygv3MXTsIk7kBhWZd5EV');
+        $api = $configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->url.'api';
+        $user = $configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->user;
+        $pass = $configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->apiKey;
+
+		$this->__construct($api, $user, $pass);
 
 		return $this;
 	}

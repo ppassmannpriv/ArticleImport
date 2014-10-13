@@ -72,6 +72,36 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 		$form = $this->Form();
 		$repository = Shopware()->Models()->getRepository('Shopware\Models\Config\Form');
 		
+        $form->setElement('text', 'url',
+            array(
+                'label' => 'Seiten URL',
+                'value' => '',
+                'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+                'description' => 'Seiten URL',
+                'required' => true,
+            )
+        );
+
+        $form->setElement('text', 'user',
+            array(
+                'label' => 'API Nutzer',
+                'value' => '',
+                'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+                'description' => 'API Nutzer',
+                'required' => true,
+            )
+        );
+
+        $form->setElement('text', 'apiKey',
+            array(
+                'label' => 'API Key',
+                'value' => '',
+                'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+                'description' => 'API Key für API Interaktion...',
+                'required' => true,
+            )
+        );
+
 		$form->setElement('text', 'xmlDirPath',
 			array(
 				'label' => 'XML Ordner',
