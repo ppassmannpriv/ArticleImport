@@ -34,7 +34,7 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
                     'First Test'
                 ))
             ),
-            'revision' => '1'
+            'revision' => '6'
         );
     }
  
@@ -46,18 +46,7 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
     public function install()
     {
         $this->subscribeEvents();
- 
-        // -Modul
-        /*$this->createMenuItem(array(
-            'label' => 'Order Export',
-            'controller' => 'viewExport',
-            'class' => 'sprite-box-zipper',
-            'action' => 'Index',
-            'active' => 1,
-            'parent' => $this->Menu()->findOneBy('label', 'MENÜ')
-        ));
- 
-		*/
+        $this->registerCronJobs();
 		$this->createConfiguration();
 		$this->regControllers();
         return array(
@@ -67,8 +56,24 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 
     }
 
+    private function registerCronJobs()
+    {
+    	$this->createCronJob(
+    		'ArticleImportDaily',
+    		'ArticleImportCronDaily',
+    		86400,
+    		true
+    	);
+
+    	$this->subscribeEvent(
+    		'Shopware_CronJob_ArticleImportCronDaily',
+    		'onCronDaily'
+    	);
+    }
+
 	public function createConfiguration()
 	{
+
 		$form = $this->Form();
 		$repository = Shopware()->Models()->getRepository('Shopware\Models\Config\Form');
 		
@@ -102,6 +107,16 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
             )
         );
 
+        $form->setElement('text', 'fileType',
+        	array(
+        		'label' => 'Dateityp',
+        		'value' => 'Welchen Dateityp wollen Sie nutzen?',
+        		'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+        		'description' => 'Dateityp für den Import',
+        		'required' => true,
+        	)
+        );
+
 		$form->setElement('text', 'xmlDirPath',
 			array(
 				'label' => 'XML Ordner',
@@ -128,6 +143,26 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 				'value' => 'Wo werden die Bilder abgelegt?',
 				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
 				'description' => 'Ordnerpfad für Bildimport',
+				'required' => true,
+			)
+		);
+
+		$form->setElement('text', 'xmlDirPathDelta',
+			array(
+				'label' => 'Delta XML Ordner',
+				'value' => 'Wo werden die Import XMLs abgelegt?',
+				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+				'description' => 'Ordnerpfad für Artikeldatenimport',
+				'required' => true,
+			)
+		);
+		
+		$form->setElement('text', 'csvDirPathDelta',
+			array(
+				'label' => 'Delta CSV Ordner',
+				'value' => 'Wo werden die Import CSVs abgelegt?',
+				'scope' => Shopware\Models\Config\Element::SCOPE_SHOP,
+				'description' => 'Ordnerpfad für Artikeldatenimport',
 				'required' => true,
 			)
 		);
@@ -180,6 +215,11 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 		$this->subscribeEvent(
 			'Enlight_Bootstrap_InitResource_ArticleImportData',
             'onInitResourceArticleImportData'
+		);
+
+		$this->subscribeEvent(
+			'Enlight_Bootstrap_InitResource_ArticleImportDispatch',
+            'onInitResourceArticleImportDispatch'
 		);
 
 		$this->subscribeEvent(
@@ -263,6 +303,20 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
         return $component;
 
 	}
+
+	public function onInitResourceArticleImportDispatch(Enlight_Event_EventArgs $arguments)
+    {
+
+		$this->Application()->Loader()->registerNamespace(
+            'Shopware_Components_Helper',
+            $this->Path() . 'Components/Helper/'
+        );
+ 
+        $component = new Shopware_Components_Helper_Dispatch();
+
+        return $component;
+
+	}
 	
 	public function onInitResourceArticleImportFiles(Enlight_Event_EventArgs $arguments)
     {
@@ -276,6 +330,15 @@ class Shopware_Plugins_Backend_ArticleImport_Bootstrap extends Shopware_Componen
 
         return $component;
 
+	}
+
+	public function onCronDaily(Enlight_Event_EventArgs $arguments)
+	{
+		try {
+			Shopware()->ArticleImportDispatch()->startImport();
+		} catch(Exception $e) {
+			throw $e;
+		}
 	}
 	
     public function afterInit()

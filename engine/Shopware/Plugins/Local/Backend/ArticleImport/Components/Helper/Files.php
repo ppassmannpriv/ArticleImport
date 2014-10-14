@@ -31,9 +31,12 @@ class Shopware_Components_Helper_Files
 		return $files;
 	}
 
-	public function getDir($filetype)
+	public function getDir($filetype, $delta)
 	{
 		$path = $_SERVER["DOCUMENT_ROOT"];
+		if($delta) {
+			$filetype .= 'Delta';
+		}
 		switch($filetype) {
 			case 'xml':
 				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->xmlDirPath;
@@ -46,6 +49,14 @@ class Shopware_Components_Helper_Files
 			case 'images':
 				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->imagesDirPath;
 				$path = $configString;
+				break;
+			case 'xmlDelta':
+				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->xmlDirPathDelta;
+				$path .= $configString;
+				break;
+			case 'csvDelta':
+				$configString = Shopware()->Plugins()->Backend()->ArticleImport()->Config()->csvDirPathDelta;
+				$path .= $configString;
 				break;
 		}
 		

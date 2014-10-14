@@ -56,4 +56,39 @@ class Shopware_Components_Helper_Data
 	    return $input;
 	}
 
+	public function createPost($article, $imgBasePath)
+	{
+		$dataHelper = Shopware()->ArticleImportData();
+
+		$post = false;
+		$active = false; 
+		if($article['active'] == '1')
+		{
+			$active = true;
+		}
+		$post = array(
+			'taxId' => 1,
+			'name' => $dataHelper->sanitize($article['name']),
+			'supplierId' => 1,
+			'active' => $active,
+			'description' => $dataHelper->sanitize($article['description']),
+			'mainDetail' => array(
+				'number' => $article['ordernumber'],
+				'active' => $article['active'],
+				'weight' => $article['weight']
+			),
+			'images' => array(
+				array(
+					'ordernumber' => $article['odernumber'],
+					'link' => 'http://placekitten.com/g/500/500',
+					'description' => $article['name'],
+					'position' => '',
+					'main' => 1
+				)
+			)
+		);
+
+		return $post;
+	}
+
 }
